@@ -107,7 +107,7 @@ const updateUserTokens = (userId: string, tokensUsed: number): void => {
 };
 
 const ChatAI = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -117,6 +117,11 @@ const ChatAI = () => {
     getUserTokenData(userId),
   );
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const isDesktop = window.matchMedia("(min-width: 640px)").matches;
+    if (isDesktop) setIsOpen(true);
+  }, []);
 
   useEffect(() => {
     setTokenData(getUserTokenData(userId));
@@ -243,35 +248,35 @@ const ChatAI = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-6 py-4 shadow-2xl transition-all duration-300 hover:scale-110 hover:shadow-blue-500/50 flex items-center gap-3 group"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-4 py-3 sm:px-6 sm:py-4 shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 sm:hover:scale-110 hover:shadow-blue-500/50 flex items-center gap-2 sm:gap-3 group touch-manipulation"
         aria-label="Abrir chat AI"
       >
         <div className="relative">
-          <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse border-2 border-white"></div>
+          <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform duration-300" />
+          <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-pulse border-2 border-white"></div>
         </div>
-        <span className="font-semibold text-base">Chat AI</span>
+        <span className="font-semibold text-sm sm:text-base">Chat AI</span>
       </button>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[420px] h-[650px] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/50 dark:border-slate-700/50 flex flex-col overflow-hidden backdrop-blur-sm">
+    <div className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 z-50 w-full h-full sm:w-[420px] sm:h-[650px] sm:max-h-[85vh] sm:rounded-3xl bg-white dark:bg-slate-900 shadow-2xl border-0 sm:border border-slate-200/50 dark:border-slate-700/50 flex flex-col overflow-hidden backdrop-blur-sm">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-700 dark:via-indigo-700 dark:to-purple-700 text-white p-5 flex items-center justify-between shadow-lg">
-        <div className="flex items-center gap-3">
-          <div className="relative">
+      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-700 dark:via-indigo-700 dark:to-purple-700 text-white px-4 py-3 sm:p-5 flex items-center justify-between shadow-lg flex-shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="relative flex-shrink-0">
             <div className="absolute inset-0 bg-white/20 rounded-full blur-md"></div>
-            <Bot className="w-6 h-6 relative z-10" />
+            <Bot className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" />
           </div>
-          <div>
-            <h3 className="font-bold text-lg">Chat AI</h3>
-            <p className="text-xs text-blue-100">Assistente de Programação</p>
+          <div className="min-w-0">
+            <h3 className="font-bold text-base sm:text-lg truncate">Chat AI</h3>
+            <p className="text-xs text-blue-100 truncate hidden sm:block">Assistente de Programação</p>
           </div>
         </div>
         <button
           onClick={() => setIsOpen(false)}
-          className="hover:bg-white/20 rounded-xl p-2 transition-all duration-200 hover:rotate-90"
+          className="flex-shrink-0 hover:bg-white/20 active:bg-white/30 rounded-xl p-2.5 transition-all duration-200 hover:rotate-90 touch-manipulation"
           aria-label="Fechar chat"
         >
           <X className="w-5 h-5" />
@@ -312,36 +317,35 @@ const ChatAI = () => {
       </div> */}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-800/30">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-5 space-y-4 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-800/30 min-h-0">
         {messages.length === 0 && (
-          <div className="text-center text-slate-500 dark:text-slate-400 mt-12">
-            <div className="relative inline-block mb-4">
+          <div className="text-center text-slate-500 dark:text-slate-400 mt-6 sm:mt-12 px-2">
+            <div className="relative inline-block mb-3 sm:mb-4">
               <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-2xl"></div>
-              <Bot className="w-16 h-16 mx-auto relative text-blue-500 dark:text-blue-400" />
+              <Bot className="w-12 h-12 sm:w-16 sm:h-16 mx-auto relative text-blue-500 dark:text-blue-400" />
             </div>
-            <h4 className="font-semibold text-lg mb-2 text-slate-700 dark:text-slate-300">
+            <h4 className="font-semibold text-base sm:text-lg mb-1.5 sm:mb-2 text-slate-700 dark:text-slate-300">
               Olá! 👋
             </h4>
-            <p className="text-sm max-w-xs mx-auto leading-relaxed">
-              Sou seu assistente de programação. Você pode enviar qualquer
-              mensagem, mas eu só respondo sobre programação e desenvolvimento.
+            <p className="text-xs sm:text-sm max-w-xs mx-auto leading-relaxed">
+              Sou seu assistente de programação. Envie qualquer mensagem; respondo sobre programação e desenvolvimento.
             </p>
           </div>
         )}
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex gap-3 ${
+            className={`flex gap-2 sm:gap-3 ${
               message.role === "user" ? "justify-end" : "justify-start"
             } animate-in fade-in slide-in-from-bottom-2 duration-300`}
           >
             {message.role === "assistant" && (
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                <Bot className="w-4 h-4 text-white" />
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
               </div>
             )}
             <div
-              className={`max-w-[75%] rounded-2xl p-4 shadow-sm ${
+              className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-3 sm:p-4 shadow-sm ${
                 message.role === "user"
                   ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-tr-sm"
                   : "bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-tl-sm"
@@ -352,18 +356,18 @@ const ChatAI = () => {
               </p>
             </div>
             {message.role === "user" && (
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center shadow-md">
-                <User className="w-4 h-4 text-white" />
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center shadow-md">
+                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
               </div>
             )}
           </div>
         ))}
         {isLoading && (
-          <div className="flex justify-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-              <Bot className="w-4 h-4 text-white" />
+          <div className="flex justify-start gap-2 sm:gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+              <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-2xl rounded-tl-sm p-4 border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl rounded-tl-sm p-3 sm:p-4 border border-slate-200 dark:border-slate-700 shadow-sm">
               <div className="flex gap-1.5">
                 <div
                   className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
@@ -386,7 +390,7 @@ const ChatAI = () => {
 
       {/* Error Message */}
       {error && (
-        <div className="mx-5 mb-3 p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/50 dark:border-red-800/50 rounded-xl shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div className="mx-3 sm:mx-5 mb-2 sm:mb-3 p-2.5 sm:p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/50 dark:border-red-800/50 rounded-xl shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-start gap-2 text-red-600 dark:text-red-400 text-xs">
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <span className="leading-relaxed">{error}</span>
@@ -395,24 +399,24 @@ const ChatAI = () => {
       )}
 
       {/* Input */}
-      <div className="p-5 bg-white dark:bg-slate-900 border-t border-slate-200/50 dark:border-slate-700/50">
-        <div className="flex gap-3 items-end">
-          <div className="flex-1 relative">
+      <div className="p-3 sm:p-5 pb-[env(safe-area-inset-bottom,0.75rem)] sm:pb-5 bg-white dark:bg-slate-900 border-t border-slate-200/50 dark:border-slate-700/50 flex-shrink-0">
+        <div className="flex gap-2 sm:gap-3 items-end">
+          <div className="flex-1 min-w-0 relative">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Digite sua mensagem sobre programação..."
-              className="w-full resize-none rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              placeholder="Mensagem sobre programação..."
+              className="w-full resize-none rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3 py-2.5 sm:px-4 sm:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
               rows={2}
               disabled={isLoading || tokensRemaining === 0}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
             {messages.length > 0 && (
               <button
                 onClick={clearChat}
-                className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl p-3 transition-all duration-200 hover:scale-105 shadow-sm"
+                className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl p-2.5 sm:p-3 transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Limpar chat"
               >
                 <RefreshCw className="w-5 h-5" />
@@ -421,14 +425,14 @@ const ChatAI = () => {
             <button
               onClick={sendMessage}
               disabled={isLoading || !input.trim() || tokensRemaining === 0}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-400 disabled:to-slate-500 disabled:cursor-not-allowed text-white rounded-xl p-3 transition-all duration-200 hover:scale-105 hover:shadow-lg shadow-md disabled:hover:scale-100 disabled:hover:shadow-md"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-400 disabled:to-slate-500 disabled:cursor-not-allowed text-white rounded-xl p-2.5 sm:p-3 transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg shadow-md disabled:hover:scale-100 disabled:hover:shadow-md touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Enviar mensagem"
             >
               <Send className="w-5 h-5" />
             </button>
           </div>
         </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-3 text-center">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 sm:mt-3 text-center hidden sm:block">
           💡 Você pode enviar qualquer mensagem, mas o chat só responde sobre
           programação
         </p>
